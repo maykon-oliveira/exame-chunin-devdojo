@@ -7,7 +7,6 @@ import org.springframework.data.relational.core.mapping.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.Year;
 
 /** @author maykon-oliveira */
 @Data
@@ -21,6 +20,6 @@ public class Vehicle {
   @NotNull private VehicleType type;
   @NotBlank private String brand;
   @NotBlank private String model;
-  @NotNull private Year year;
+  @NotNull private Integer year;
   @NotNull private BigDecimal price;
 }

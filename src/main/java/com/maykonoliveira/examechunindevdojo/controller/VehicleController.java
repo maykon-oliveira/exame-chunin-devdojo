@@ -3,14 +3,14 @@ package com.maykonoliveira.examechunindevdojo.controller;
 import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.service.VehicleService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /** @author maykon-oliveira */
 @RestController
@@ -26,10 +26,23 @@ public class VehicleController {
 
   @GetMapping("{id}")
   public Mono<Vehicle> findById(@PathVariable Long id) {
-    return vehicleService.findById(id).switchIfEmpty(monoResponseStatusNotFoundException());
+    return vehicleService.findById(id);
   }
 
-  public <T> Mono<T> monoResponseStatusNotFoundException() {
-    return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Veículo não encontrado"));
+  @PostMapping
+  @ResponseStatus(CREATED)
+  public Mono<Vehicle> save(@Valid @RequestBody Vehicle vehicle) {
+    return vehicleService.save(vehicle);
+  }
+
+  @PutMapping("{id}")
+  @ResponseStatus(NO_CONTENT)
+  public Mono<Void> update(@PathVariable Long id, @Valid @RequestBody Vehicle vehicle) {
+    return vehicleService.update(vehicle.withId(id));
+  }
+
+  @DeleteMapping("{id}")
+  public Mono<Void> delete(@PathVariable Long id) {
+    return vehicleService.delete(id);
   }
 }
