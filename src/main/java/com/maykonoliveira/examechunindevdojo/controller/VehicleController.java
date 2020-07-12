@@ -30,6 +30,6 @@ public class VehicleController {
   }
 
   public <T> Mono<T> monoResponseStatusNotFoundException() {
-    return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND));
+    return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Veículo não encontrado"));
   }
 }
