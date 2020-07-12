@@ -5,6 +5,7 @@ import com.maykonoliveira.examechunindevdojo.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /** @author maykon-oliveira */
 @Service
@@ -14,5 +15,9 @@ public class VehicleService {
 
   public Flux<Vehicle> findAll() {
     return vehicleRepository.findAll();
+  }
+
+  public Mono<Vehicle> findById(Long id) {
+    return vehicleRepository.findById(id);
   }
 }
