@@ -3,7 +3,6 @@ package com.maykonoliveira.examechunindevdojo.controller;
 import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.entity.VehicleType;
 import com.maykonoliveira.examechunindevdojo.service.VehicleService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,21 +70,6 @@ class VehicleControllerTest {
         .isOk()
         .expectBody(Vehicle.class)
         .isEqualTo(vehicle);
-  }
-
-  @Test
-  @Disabled
-  @DisplayName("Should returns 404 status code when vehicle not found")
-  void test3() {
-    long id = 671L;
-
-    webTestClient
-        .get()
-        .uri("/vehicles/" + id)
-        .accept(APPLICATION_JSON)
-        .exchange()
-        .expectStatus()
-        .isNotFound();
   }
 
   @Test
