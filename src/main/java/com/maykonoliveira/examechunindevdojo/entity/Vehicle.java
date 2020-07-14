@@ -1,5 +1,6 @@
 package com.maykonoliveira.examechunindevdojo.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Table("vehicle")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Vehicle {
   @Id private Long id;
   @NotNull private VehicleType type;
@@ -22,4 +24,5 @@ public class Vehicle {
   @NotBlank private String model;
   @NotNull private Integer year;
   @NotNull private BigDecimal price;
+  private String thumbnail;
 }

@@ -3,6 +3,7 @@ package com.maykonoliveira.examechunindevdojo.controller;
 import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.service.VehicleService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 /** @author maykon-oliveira */
 @RestController
@@ -29,10 +31,11 @@ public class VehicleController {
     return vehicleService.findById(id);
   }
 
-  @PostMapping
   @ResponseStatus(CREATED)
-  public Mono<Vehicle> save(@Valid @RequestBody Vehicle vehicle) {
-    return vehicleService.save(vehicle);
+  @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+  public Mono<Vehicle> save(
+      @Valid Vehicle vehicle, @RequestPart("file") Mono<FilePart> filePartMono) {
+    return vehicleService.saveAndStoreFiles(vehicle, filePartMono);
   }
 
   @PutMapping("{id}")

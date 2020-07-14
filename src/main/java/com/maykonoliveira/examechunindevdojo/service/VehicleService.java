@@ -3,7 +3,9 @@ package com.maykonoliveira.examechunindevdojo.service;
 import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,6 +17,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public class VehicleService {
   private final VehicleRepository vehicleRepository;
+  private final VehicleImageService vehicleImageService;
 
   public Flux<Vehicle> findAll() {
     return vehicleRepository.findAll();
@@ -30,6 +33,18 @@ public class VehicleService {
 
   public Mono<Vehicle> save(Vehicle vehicle) {
     return vehicleRepository.save(vehicle);
+  }
+
+  @Transactional
+  public Mono<Vehicle> saveAndStoreFiles(Vehicle vehicle, Mono<FilePart> filePartMono) {
+    return vehicleRepository
+        .save(vehicle)
+        .flatMap(
+            (vehicleSaved) ->
+                vehicleImageService
+                    .store(filePartMono)
+                    .flatMap(
+                        filename -> vehicleRepository.save(vehicleSaved.withThumbnail(filename))));
   }
 
   public Mono<Void> update(Vehicle vehicle) {
