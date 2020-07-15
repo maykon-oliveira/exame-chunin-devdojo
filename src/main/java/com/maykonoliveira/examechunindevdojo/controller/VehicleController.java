@@ -4,6 +4,7 @@ import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.service.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,6 +33,7 @@ public class VehicleController {
   }
 
   @ResponseStatus(CREATED)
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
   public Mono<Vehicle> save(
       @Valid Vehicle vehicle, @RequestPart("file") Mono<FilePart> filePartMono) {
@@ -39,12 +41,14 @@ public class VehicleController {
   }
 
   @PutMapping("{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   @ResponseStatus(NO_CONTENT)
   public Mono<Void> update(@PathVariable Long id, @Valid @RequestBody Vehicle vehicle) {
     return vehicleService.update(vehicle.withId(id));
   }
 
   @DeleteMapping("{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public Mono<Void> delete(@PathVariable Long id) {
     return vehicleService.delete(id);
   }

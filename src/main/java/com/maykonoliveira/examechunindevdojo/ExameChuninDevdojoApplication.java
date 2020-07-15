@@ -11,6 +11,8 @@ public class ExameChuninDevdojoApplication {
   //  }
 
   public static void main(String[] args) {
+    //
+    // System.out.println(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("admin"));
     SpringApplication.run(ExameChuninDevdojoApplication.class, args);
   }
 }
