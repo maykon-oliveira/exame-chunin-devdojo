@@ -12,8 +12,8 @@ import java.util.Optional;
 /** @author maykon-oliveira */
 @Service
 @AllArgsConstructor
-public class VehicleImageService {
-  private final String FILES_UPLOAD_DIR = "/tmp/";
+public class FileStorageService {
+  private final String UPLOAD_DIR = "uploads/";
 
   public Mono<String> store(Mono<FilePart> filePartMono) {
     return filePartMono.flatMap(
@@ -25,7 +25,7 @@ public class VehicleImageService {
                       () -> {
                         throw new FileUploadException("File dosen't have a extension");
                       });
-          var filename = FILES_UPLOAD_DIR + timeMillis + extension;
+          var filename = UPLOAD_DIR + timeMillis + extension;
           return file.transferTo(Paths.get(filename)).then(Mono.just(filename));
         });
   }

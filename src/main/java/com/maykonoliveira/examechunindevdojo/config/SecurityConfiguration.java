@@ -21,7 +21,9 @@ public class SecurityConfiguration {
     return http.authorizeExchange()
         .pathMatchers(HttpMethod.GET, "/vehicles")
         .permitAll()
-        .matchers(new RegexServerWebExchangeMatcher(HttpMethod.GET, Pattern.compile("^/(css|js)/")))
+        .matchers(
+            new RegexServerWebExchangeMatcher(
+                HttpMethod.GET, Pattern.compile("^/(css|js|uploads)/")))
         .permitAll()
         .anyExchange()
         .authenticated()

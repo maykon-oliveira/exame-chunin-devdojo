@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public class VehicleService {
   private final VehicleRepository vehicleRepository;
-  private final VehicleImageService vehicleImageService;
+  private final FileStorageService fileStorageService;
 
   public Flux<Vehicle> findAll() {
     return vehicleRepository.findAll();
@@ -41,7 +41,7 @@ public class VehicleService {
         .save(vehicle)
         .flatMap(
             (vehicleSaved) ->
-                vehicleImageService
+                fileStorageService
                     .store(filePartMono)
                     .flatMap(
                         filename -> vehicleRepository.save(vehicleSaved.withThumbnail(filename))));

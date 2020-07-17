@@ -29,7 +29,7 @@ public class VehicleController {
   public String findAll(Model model) {
     IReactiveDataDriverContextVariable reactiveDataDrivenMode =
         new ReactiveDataDriverContextVariable(vehicleService.findAll(), 1);
-    model.addAttribute("movies", reactiveDataDrivenMode);
+    model.addAttribute("vehicles", reactiveDataDrivenMode);
     return "index";
   }
 
