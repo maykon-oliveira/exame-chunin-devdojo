@@ -10,16 +10,18 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import java.util.regex.Pattern;
+
 /** @author maykon-oliveira */
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
   @Bean
   public SecurityWebFilterChain webFilterChain(ServerHttpSecurity http) {
-    return http.csrf()
-        .disable()
-        .authorizeExchange()
+    return http.authorizeExchange()
         .pathMatchers(HttpMethod.GET, "/vehicles")
+        .permitAll()
+        .matchers(new RegexServerWebExchangeMatcher(HttpMethod.GET, Pattern.compile("^/(css|js)/")))
         .permitAll()
         .anyExchange()
         .authenticated()

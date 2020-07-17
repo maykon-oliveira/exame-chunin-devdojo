@@ -3,45 +3,40 @@ package com.maykonoliveira.examechunindevdojo.controller;
 import com.maykonoliveira.examechunindevdojo.entity.Vehicle;
 import com.maykonoliveira.examechunindevdojo.entity.VehicleType;
 import com.maykonoliveira.examechunindevdojo.repository.VehicleRepository;
-import com.maykonoliveira.examechunindevdojo.service.VehicleService;
+import com.maykonoliveira.examechunindevdojo.util.VehicleCreator;
+import com.maykonoliveira.examechunindevdojo.util.WebTestClientUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 
-@Import(VehicleService.class)
+@SpringBootTest
+@AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(VehicleController.class)
 class VehicleControllerITTest {
-  @Autowired private WebTestClient webTestClient;
+  @Autowired private WebTestClientUtil webTestClientUtil;
+  @Autowired private WebTestClient unauthenticatedUser;
+  private WebTestClient adminAuthenticatedUser;
   @MockBean private VehicleRepository vehicleRepository;
-  private final Vehicle vehicle =
-      Vehicle.builder()
-          .id(1L)
-          .brand("Renault")
-          .type(VehicleType.SPORT)
-          .model("Sport")
-          .year(2020)
-          .price(new BigDecimal(10000))
-          .build();
+  private final Vehicle vehicle = VehicleCreator.createValidVehicle();
 
   @BeforeEach
   void setup() {
+    adminAuthenticatedUser = webTestClientUtil.authenticateClient("admin", "admin");
     when(vehicleRepository.findAll()).thenReturn(Flux.just(vehicle));
     when(vehicleRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Mono.just(vehicle));
     when(vehicleRepository.save(ArgumentMatchers.any(Vehicle.class)))
@@ -52,7 +47,7 @@ class VehicleControllerITTest {
   @Test
   @DisplayName("Should returns a list of vehicles with status code 200 and length 3")
   void test1() {
-    webTestClient
+    unauthenticatedUser
         .get()
         .uri("/vehicles")
         .accept(APPLICATION_JSON)
@@ -66,7 +61,7 @@ class VehicleControllerITTest {
   @Test
   @DisplayName("Should returns a vehicle with status code 200 when vehicle exists")
   void test2() {
-    webTestClient
+    adminAuthenticatedUser
         .get()
         .uri("/vehicles/" + vehicle.getId())
         .accept(APPLICATION_JSON)
@@ -80,11 +75,11 @@ class VehicleControllerITTest {
   @Test
   @DisplayName("Given a invalid vehicle should returns 404 status code")
   void test4() {
-    webTestClient
+    adminAuthenticatedUser
         .post()
         .uri("/vehicles")
-        .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(new Vehicle()))
+        .contentType(MULTIPART_FORM_DATA)
+        .body(BodyInserters.fromMultipartData("files", 1))
         .exchange()
         .expectStatus()
         .isBadRequest();
@@ -102,11 +97,11 @@ class VehicleControllerITTest {
                       return v;
                     }));
 
-    webTestClient
+    adminAuthenticatedUser
         .post()
         .uri("/vehicles")
-        .contentType(APPLICATION_JSON)
-        .body(BodyInserters.fromValue(vehicle))
+        .contentType(MULTIPART_FORM_DATA)
+        .body(VehicleCreator.createMultipartValidVehicle())
         .exchange()
         .expectStatus()
         .isCreated()
@@ -124,7 +119,7 @@ class VehicleControllerITTest {
   @Test
   @DisplayName("Given a id to delete should returns 200 status code")
   void test6() {
-    webTestClient.delete().uri("/vehicles/" + 1).exchange().expectStatus().isOk();
+    adminAuthenticatedUser.delete().uri("/vehicles/" + 1).exchange().expectStatus().isOk();
   }
 
   @Test
@@ -133,6 +128,6 @@ class VehicleControllerITTest {
     var id = 1L;
     when(vehicleRepository.findById(id)).thenReturn(Mono.empty());
 
-    webTestClient.delete().uri("/vehicles" + id).exchange().expectStatus().isNotFound();
+    adminAuthenticatedUser.delete().uri("/vehicles" + id).exchange().expectStatus().isNotFound();
   }
 }
