@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
+import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -22,13 +25,13 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public class VehicleController {
   private final VehicleService vehicleService;
 
-  //  @GetMapping
-  //  public String findAll(Model model) {
-  //    IReactiveDataDriverContextVariable reactiveDataDrivenMode =
-  //        new ReactiveDataDriverContextVariable(vehicleService.findAll(), 1);
-  //    model.addAttribute("vehicles", reactiveDataDrivenMode);
-  //    return "index";
-  //  }
+  @GetMapping
+  public String findAll(Model model) {
+    IReactiveDataDriverContextVariable reactiveDataDrivenMode =
+        new ReactiveDataDriverContextVariable(vehicleService.findAll(), 1);
+    model.addAttribute("vehicles", reactiveDataDrivenMode);
+    return "vehicles/vehicles-list";
+  }
 
   @GetMapping("{id}")
   public Mono<Vehicle> findById(@PathVariable Long id) {

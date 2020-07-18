@@ -1,70 +1,31 @@
 <!doctype html >
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Vehicle Store</title>
-    <link href="../static/css/tailwind.min.css" th:href="@{/css/tailwind.min.css}" rel="stylesheet">
 </head>
 <body>
-<div class="relative bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
-            <div class="lg:w-0 lg:flex-1">
-                Vehicles Store
-            </div>
-            <div class="-mr-2 -my-2 md:hidden">
-                <button type="button"
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-            </div>
-            <div
-                    class="hidden md:flex items-center justify-end space-x-8 md:flex-1 lg:w-0">
-                <a sec:authorize="isAnonymous()" href="#" th:href="@{/login}"
-                   class="whitespace-no-wrap text-base leading-6 font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900">
-                    isAnonymous
-                </a>
-                <a href="#" th:href="@{/login}"
-                   class="whitespace-no-wrap text-base leading-6 font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900">
-                    Sign in
-                </a>
-                <a sec:authorize="isAuthenticated()" th:href="@{/logout}"
-                   class="whitespace-no-wrap text-base leading-6 font-medium text-gray-500 hover:text-gray-900 focus:outline-none focus:text-gray-900">
-                    Logout
-                </a>
-            </div>
-        </div>
-        <main>
-            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                <div class="flex flex-wrap -mb-4">
-                    <div class="w-1/3 py-4 mb-4" th:each="vehicle : ${vehicles}">
-                        <div class="px-4 sm:px-0">
-                            <div class="max-w-sm rounded overflow-hidden shadow-lg">
-                                <img style="height: 250px" class="w-full" th:src="${vehicle.thumbnail}"
-                                     th:alt="|${vehicle.model} - ${vehicle.brand}|">
-                                <div class="px-6 py-4">
-                                    <div th:text="|${vehicle.model} - ${vehicle.brand}|" class="font-bold text-xl mb-2">
-                                        The Coldest Sunset
-                                    </div>
-                                    <p class="text-gray-700 text-base flex justify-between">
-                                        <span th:text="${vehicle.year}"></span>
-                                        <span th:inline="text">R$ [[${#numbers.formatDecimal(vehicle.price, 0, 'POINT', 2, 'COMMA')}]]</span>
-                                    </p>
-                                </div>
+<main layout:fragment="content">
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap -mb-4">
+            <div class="w-1/3 py-4 mb-4" th:each="vehicle : ${vehicles}">
+                <div class="px-4 sm:px-0">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                        <img style="height: 250px" class="w-full" th:src="${vehicle.thumbnail}"
+                             th:alt="|${vehicle.model} - ${vehicle.brand}|">
+                        <div class="px-6 py-4">
+                            <div th:text="|${vehicle.model} - ${vehicle.brand}|" class="font-bold text-xl mb-2">
+                                The Coldest Sunset
                             </div>
+                            <p class="text-gray-700 text-base flex justify-between">
+                                <span th:text="${vehicle.year}"></span>
+                                <span th:inline="text">R$ [[${#numbers.formatDecimal(vehicle.price, 0, 'POINT', 2, 'COMMA')}]]</span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
-</div>
-<script src="../static/js/tailwind.js" th:src="@{/js/tailwind.js}"></script>
+</main>
 </body>
 </html>

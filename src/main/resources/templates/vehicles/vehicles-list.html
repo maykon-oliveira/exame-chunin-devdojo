@@ -1,0 +1,51 @@
+<!doctype html >
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="flex flex-col">
+        <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <table class="min-w-full">
+                    <thead>
+                    <tr>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            Brand
+                        </th>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            Model
+                        </th>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    <tr th:each="vehicle : ${vehicles}">
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div th:text="${vehicle.brand}"
+                                         class="text-sm leading-5 font-medium text-gray-900"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div th:text="${vehicle.model}" class="text-sm leading-5 text-gray-900"></div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                            <div class="flex space-between">
+                                <a href="#" class="block mx-2 text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <a href="#" class="block mx-2 text-indigo-600 hover:text-indigo-900">View</a>
+                                <a href="#" class="block mx-2 text-indigo-600 hover:text-indigo-900">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
