@@ -1,1 +1,12 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:15432/devdojo?schema=exame_chunin
+    username: postgres
+    password: postgres
 
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          r2dbc: DEBUG

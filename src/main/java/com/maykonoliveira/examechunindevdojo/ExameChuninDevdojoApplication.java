@@ -6,8 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ExameChuninDevdojoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ExameChuninDevdojoApplication.class, args);
-    }
+  //  static {
+  //    BlockHound.install();
+  //  }
 
+  public static void main(String[] args) {
+    //
+    // System.out.println(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("admin"));
+    SpringApplication.run(ExameChuninDevdojoApplication.class, args);
+  }
 }
