@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import java.util.regex.Pattern;
 
@@ -19,7 +22,7 @@ public class SecurityConfiguration {
   @Bean
   public SecurityWebFilterChain webFilterChain(ServerHttpSecurity http) {
     return http.authorizeExchange()
-        .pathMatchers(HttpMethod.GET, "/vehicles")
+        .pathMatchers(HttpMethod.GET, "/", "/login")
         .permitAll()
         .matchers(
             new RegexServerWebExchangeMatcher(
@@ -27,6 +30,14 @@ public class SecurityConfiguration {
         .permitAll()
         .anyExchange()
         .authenticated()
+        .and()
+        .formLogin()
+        .loginPage("/login")
+        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("/vehicles"))
+        .and()
+        .logout()
+        .logoutUrl("/logout")
+        .requiresLogout(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/logout"))
         .and()
         .httpBasic()
         .and()
@@ -36,5 +47,10 @@ public class SecurityConfiguration {
   @Bean
   public ReactiveAuthenticationManager authenticationManager(UserService userService) {
     return new UserDetailsRepositoryReactiveAuthenticationManager(userService);
+  }
+
+  @Bean
+  public SpringSecurityDialect securityDialect() {
+    return new SpringSecurityDialect();
   }
 }
